@@ -2183,8 +2183,8 @@ int ff_alloc_a53_sei(const AVFrame *frame, size_t prefix_len,
      */
     AV_WL32(sei_data + 3, MKTAG('G', 'A', '9', '4'));
     sei_data[7] = 3;
-    sei_data[8] = ((side_data->size/3) & 0x1f) | 0x40;
-    sei_data[9] = 0;
+    sei_data[8] = ((side_data->size/3) & 0x1f) | 0xc0;
+    sei_data[9] = 0xff;
 
     memcpy(sei_data + 10, side_data->data, side_data->size);
 
