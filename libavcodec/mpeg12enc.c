@@ -381,13 +381,16 @@ static void mpeg1_encode_sequence_header(MpegEncContext *s)
         av_assert0(s->drop_frame_timecode == !!(s->tc.flags & AV_TIMECODE_FLAG_DROPFRAME));
         if (s->drop_frame_timecode)
             time_code = av_timecode_adjust_ntsc_framenum2(time_code, fps);
+        
+        
+        printf("\n=============\n\n\n\nforce_open_gop = '%d'\n\n\n\n=============\n", s->force_open_gop);
 
         put_bits(&s->pb, 5, (uint32_t)((time_code / (fps * 3600)) % 24));
         put_bits(&s->pb, 6, (uint32_t)((time_code / (fps *   60)) % 60));
         put_bits(&s->pb, 1, 1);
         put_bits(&s->pb, 6, (uint32_t)((time_code / fps) % 60));
         put_bits(&s->pb, 6, (uint32_t)((time_code % fps)));
-        put_bits(&s->pb, 1, !!(s->avctx->flags & AV_CODEC_FLAG_CLOSED_GOP) || s->intra_only || !s->gop_picture_number);
+        put_bits(&s->pb, 1, !!(s->avctx->flags & AV_CODEC_FLAG_CLOSED_GOP) || s->intra_only || (!s->gop_picture_number && !s->force_open_gop));
         put_bits(&s->pb, 1, 0);                     // broken link
     }
 }
@@ -1165,6 +1168,7 @@ static const AVOption mpeg2_options[] = {
     {     "secam",        NULL, 0, AV_OPT_TYPE_CONST,  {.i64 = VIDEO_FORMAT_SECAM      },  0, 0, VE, "video_format" },
     {     "mac",          NULL, 0, AV_OPT_TYPE_CONST,  {.i64 = VIDEO_FORMAT_MAC        },  0, 0, VE, "video_format" },
     {     "unspecified",  NULL, 0, AV_OPT_TYPE_CONST,  {.i64 = VIDEO_FORMAT_UNSPECIFIED},  0, 0, VE, "video_format" },
+    { "force-open-gop",  "Don't put closed_gop glag to the first frame", OFFSET(force_open_gop), AV_OPT_TYPE_BOOL,  {.i64 = 0},  0, 1, VE },
     FF_MPV_COMMON_OPTS
     { NULL },
 };

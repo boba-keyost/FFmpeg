@@ -466,6 +466,7 @@ typedef struct MpegEncContext {
     int top_field_first;
     int concealment_motion_vectors;
     int q_scale_type;
+    int force_open_gop;
     int brd_scale;
     int intra_vlc_format;
     int alternate_scan;
