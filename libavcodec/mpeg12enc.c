@@ -381,9 +381,6 @@ static void mpeg1_encode_sequence_header(MpegEncContext *s)
         av_assert0(s->drop_frame_timecode == !!(s->tc.flags & AV_TIMECODE_FLAG_DROPFRAME));
         if (s->drop_frame_timecode)
             time_code = av_timecode_adjust_ntsc_framenum2(time_code, fps);
-        
-        
-        printf("\n=============\n\n\n\nforce_open_gop = '%d'\n\n\n\n=============\n", s->force_open_gop);
 
         put_bits(&s->pb, 5, (uint32_t)((time_code / (fps * 3600)) % 24));
         put_bits(&s->pb, 6, (uint32_t)((time_code / (fps *   60)) % 60));
