@@ -1146,8 +1146,13 @@ static void do_video_out(OutputFile *of,
                 nb_frames = 0;
             else if (delta > 1.1) {
                 nb_frames = lrintf(delta);
-                if (delta0 > 1.1)
+                if (delta0 > 1.1) {
                     nb0_frames = lrintf(delta0 - 0.6);
+                } else if (delta0 >= 1) { // rounding of 1.008, for example
+                    nb0_frames = 1;
+                } else {
+                    nb0_frames = 0;
+                }
             }
             break;
         case VSYNC_VFR:
